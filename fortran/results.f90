@@ -41,8 +41,8 @@
 
     integer, parameter :: derived_age=1, derived_zstar=2, derived_rstar=3, derived_thetastar=4, derived_DAstar = 5, &
         derived_zdrag=6, derived_rdrag=7,derived_kD=8,derived_thetaD=9, derived_zEQ =10, derived_keq =11, &
-        derived_thetaEQ=12, derived_theta_rs_EQ = 13
-    integer, parameter :: nthermo_derived = 13
+        derived_thetaEQ=12, derived_theta_rs_EQ =13, derived_tau =14
+    integer, parameter :: nthermo_derived = 14
 
     Type lSamples
         integer :: nl = 0
@@ -2185,6 +2185,7 @@
             ThermoDerivedParams( derived_thetaEQ ) = 100*tau_eq/DA
             ThermoDerivedParams( derived_theta_rs_EQ ) = 100*rs_EQ/DA
             ThermoDerivedParams( derived_thetaD ) =  100*const_pi/ThermoDerivedParams( derived_kD )/DA
+            ThermoDerivedParams( derived_tau ) = this%actual_opt_depth
 
             if (allocated(CP%z_outputs)) then
                 if (allocated(State%BackgroundOutputs%H)) &

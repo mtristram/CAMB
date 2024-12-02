@@ -255,7 +255,7 @@
     integer i, status
     real(dl) nmassive
     character(LEN=*), intent(inout) :: ErrMsg
-    character(LEN=:), allocatable :: NumStr, S, DarkEneryModel, RecombinationModel
+    character(LEN=:), allocatable :: NumStr, S, DarkEneryModel, RecombinationModel, ReionModel
     logical :: DoCounts
 
     CAMB_ReadParams = .false.
@@ -517,7 +517,21 @@
 
     call Ini%Read('Alens', P%Alens)
 
+    !MT
+    ReionModel = UpperCase(Ini%Read_String_Default('reionization_model', 'TanhReionization'))
+    if (allocated(P%Reion)) deallocate(P%Reion)
+    if (ReionModel == 'TANHREIONIZATION') then
+        allocate(TTanhReionization::P%Reion)
+    else if (ReionModel == 'EXPREIONIZATION') then
+        allocate (TExpReionization::P%Reion)
+    else if (ReionModel == 'PCAREIONIZATION') then
+        allocate (TPCAReionization::P%Reion)
+    else
+        ErrMsg = 'Unknown reionization model: '//trim(ReionModel)
+        return
+    end if
     call P%Reion%ReadParams(Ini)
+
     call P%InitPower%ReadParams(Ini)
 
     RecombinationModel = UpperCase(Ini%Read_String_Default('recombination_model', 'Recfast'))

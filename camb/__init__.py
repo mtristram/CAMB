@@ -24,7 +24,7 @@ from . import dark_energy
 from . import nonlinear
 from .model import CAMBparams, TransferParams
 from .results import CAMBdata, MatterTransferData, ClTransferData
-from .reionization import TanhReionization, ExpReionization
+from .reionization import TanhReionization, ExpReionization, PCAReionization
 from .nonlinear import Halofit
 from .dark_energy import DarkEnergyFluid, DarkEnergyPPF
 from .initialpower import InitialPowerLaw, SplinedInitialPower

@@ -18,7 +18,7 @@ from typing import Union, Optional
 
 max_nu = 5
 max_transfer_redshifts = 256
-nthermo_derived = 13
+nthermo_derived = 14
 Transfer_kh = 1
 Transfer_cdm = 2
 Transfer_b = 3
@@ -46,7 +46,7 @@ NonLinear_both = "NonLinear_both"
 NonLinear_names = [NonLinear_none, NonLinear_pk, NonLinear_lens, NonLinear_both]
 
 derived_names = ['age', 'zstar', 'rstar', 'thetastar', 'DAstar', 'zdrag',
-                 'rdrag', 'kd', 'thetad', 'zeq', 'keq', 'thetaeq', 'thetarseq']
+                 'rdrag', 'kd', 'thetad', 'zeq', 'keq', 'thetaeq', 'thetarseq', 'tau']
 
 transfer_names = ['k/h', 'delta_cdm', 'delta_baryon', 'delta_photon', 'delta_neutrino', 'delta_nu', 'delta_tot',
                   'delta_nonu', 'delta_tot_de', 'Weyl', 'v_newtonian_cdm', 'v_newtonian_baryon', 'v_baryon_cdm']
@@ -795,7 +795,10 @@ class CAMBparams(F2003Class):
         return self.primordial_power(k, 2)
 
     def primordial_power(self, k, ix):
-        karr = np.ascontiguousarray([k] if np.isscalar(k) else k, dtype=np.float64)
+        if np.isscalar(k):
+            karr = np.array([k], dtype=np.float64)
+        else:
+            karr = np.array(k, dtype=np.float64)
         n = karr.shape[0]
         powers = np.empty(n)
         self.f_PrimordialPower(karr, powers, byref(c_int(n)), byref(c_int(ix)))

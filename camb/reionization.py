@@ -1,5 +1,5 @@
-from .baseconfig import F2003Class, fortran_class, f_pointer
-from ctypes import c_bool, c_double, POINTER, byref, c_void_p
+from .baseconfig import F2003Class, fortran_class, f_pointer, AllocatableArrayDouble, np
+from ctypes import c_bool, c_int, c_double, POINTER, byref, c_void_p
 
 
 class ReionizationModel(F2003Class):
@@ -126,3 +126,71 @@ class ExpReionization(BaseTauWithHeReionization):
             self.reion_exp_power = reion_exp_power
         if reion_exp_smooth_width is not None:
             self.reion_exp_smooth_width = reion_exp_smooth_width
+
+
+@fortran_class
+class PCAReionization(BaseTauWithHeReionization):
+    """
+        An ionization fraction from Principal Component Analysis
+        This model fit amplitude of eigenvectors of xe(z)
+        See e.g.  arXiv:0303400, arXiv:1609.04788
+    """
+    _fields_ = [
+#        ("reion_nmode", c_int, "Number of PCA modes"),
+#        ("reion_modes", c_double * max_nmodes, {"size": "reion_nmode"}, "Amplitudes for reionization modes"),
+        ("reion_pca_mode1", c_double, "Amplitude of mode 1"),
+        ("reion_pca_mode2", c_double, "Amplitude of mode 2"),
+        ("reion_pca_mode3", c_double, "Amplitude of mode 3"),
+        ("reion_pca_mode4", c_double, "Amplitude of mode 4"),
+        ("reion_pca_mode5", c_double, "Amplitude of mode 5"),
+        ("reion_pca_mode6", c_double, "Amplitude of mode 6"),
+        ("reion_pca_mode7", c_double, "Amplitude of mode 7"),
+        ("reion_pca_mode8", c_double, "Amplitude of mode 8"),
+        ("reion_pca_mode9", c_double, "Amplitude of mode 9"),
+        ("reion_pca_mode10", c_double, "Amplitude of mode 10"),
+        ]
+
+    _fortran_class_name_ = 'TPCAReionization'
+
+    def set_extra_params(self,
+                         reion_pca_mode1=0,
+                         reion_pca_mode2=0,
+                         reion_pca_mode3=0,
+                         reion_pca_mode4=0,
+                         reion_pca_mode5=0,
+                         reion_pca_mode6=0,
+                         reion_pca_mode7=0,
+                         reion_pca_mode8=0,
+                         reion_pca_mode9=0,
+                         reion_pca_mode10=0):
+#    def set_extra_params(self, reion_nmode, reion_modes=None):
+        """
+        Set extra parameters (not tau, or zrei)
+
+#        :param reion_nmode: number of amplitudes
+#        :param reion_modes: array of amplitudes
+        :param reion_pca_mode1: amplitude of mode 1
+        :param reion_pca_mode2: amplitude of mode 2
+        :param reion_pca_mode3: amplitude of mode 3
+        :param reion_pca_mode4: amplitude of mode 4
+        :param reion_pca_mode5: amplitude of mode 5
+        """
+#        if reion_modes is not None:
+#            self.reion_modes = reion_modes
+#            print( "**** ", len(reion_modes), "****", reion_modes)
+#            self.reion_pca_mode1 = reion_modes[0]
+#            self.reion_pca_mode2 = reion_modes[1]
+#            self.reion_pca_mode3 = reion_modes[2]
+#            self.reion_pca_mode4 = reion_modes[3]
+#            self.reion_pca_mode5 = reion_modes[4]
+        self.reion_nmodes = 0
+        self.reion_pca_mode1 = reion_pca_mode1
+        self.reion_pca_mode2 = reion_pca_mode2
+        self.reion_pca_mode3 = reion_pca_mode3
+        self.reion_pca_mode4 = reion_pca_mode4
+        self.reion_pca_mode5 = reion_pca_mode5
+        self.reion_pca_mode6 = reion_pca_mode6
+        self.reion_pca_mode7 = reion_pca_mode7
+        self.reion_pca_mode8 = reion_pca_mode8
+        self.reion_pca_mode9 = reion_pca_mode9
+        self.reion_pca_mode10 = reion_pca_mode10
